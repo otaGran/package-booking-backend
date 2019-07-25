@@ -1,5 +1,5 @@
 package com.oocl.packagebooking.controller;
-
+import com.google.gson.Gson;
 
 import com.google.gson.Gson;
 import com.oocl.packagebooking.model.Appointment;
@@ -12,6 +12,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -19,8 +21,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,17 +41,29 @@ public class AppointmentControllerTest {
 
     @Test
     public void should_return_all_appointments_when_get() throws Exception {
-        Appointment Alex =new Appointment(00000001L,"0000000001",System.currentTimeMillis());
-        Appointment Lee =new Appointment(00000002L,"0000000002",System.currentTimeMillis());
-       List<Appointment> appointmentList = new ArrayList<>();
-       appointmentList.add(Alex);
-       appointmentList.add(Lee);
-       when(appointmentRepository.findAll()).thenReturn(appointmentList);
+        Appointment Alex = new Appointment(00000001L, "0000000001", System.currentTimeMillis());
+        Appointment Lee = new Appointment(00000002L, "0000000002", System.currentTimeMillis());
+        List<Appointment> appointmentList = new ArrayList<>();
+        appointmentList.add(Alex);
+        appointmentList.add(Lee);
+        when(appointmentRepository.findAll()).thenReturn(appointmentList);
         mockMvc.perform(get("/appointments"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().json(new Gson().toJson(appointmentList, List.class)));
+    }
 
+    @Test
+    public void should_add_a_appointment_when_post() throws Exception {
+        Appointment Alex = new Appointment(00000001L, "0000000001", System.currentTimeMillis());
+        Gson gson = new Gson();
+        when(appointmentRepository.save(any())).thenReturn(Alex);
+        mockMvc.perform(post("/appointments")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(Alex)))
+                .andExpect(status().isOk())
+                .andExpect(content().json(new Gson().toJson(Alex)));
     }
 
 
