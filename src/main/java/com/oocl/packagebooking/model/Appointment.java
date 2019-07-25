@@ -12,4 +12,6 @@ public class Appointment {
     private long id;
     private String parcelNumber;
     private Date appointment;
+
+
 }
