@@ -14,4 +14,5 @@ public class Parcel {
     private String tel;
     private int status;
 
+
 }
