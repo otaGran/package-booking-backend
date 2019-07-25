@@ -56,7 +56,7 @@ public class ParcelControllerTest {
 
     @Test
     public void should_add_a_appointment_when_post() throws Exception {
-        Appointment Alex = new Appointment(00000001L, "0000000001", System.currentTimeMillis());
+        Parcel Alex = new Parcel(0000002L,"00000002","Lee","13000000000",0);
         Gson gson = new Gson();
         when(parcelRepository.save(any())).thenReturn(Alex);
         mockMvc.perform(post("/parcels")
