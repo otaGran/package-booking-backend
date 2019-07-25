@@ -1,9 +1,7 @@
 package com.oocl.packagebooking.controller;
 
 import com.google.gson.Gson;
-import com.oocl.packagebooking.model.Appointment;
 import com.oocl.packagebooking.model.Parcel;
-import com.oocl.packagebooking.repository.AppointmentRepository;
 import com.oocl.packagebooking.repository.ParcelRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,11 +16,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -63,6 +59,21 @@ public class ParcelControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(Alex)))
+                .andExpect(status().isOk())
+                .andExpect(content().json(new Gson().toJson(Alex)));
+    }
+
+
+    @Test
+    public void should_update_a_parcel_when_patch() throws Exception {
+        Parcel Alex = new Parcel(0000002L,"00000002","Lee","13000000000",0);
+        Gson gson = new Gson();
+        when(parcelRepository.findById(1L).get()).thenReturn(Alex);
+        when(parcelRepository.save(any())).thenReturn(Alex);
+        mockMvc.perform(patch("/parcels/1")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{status:0}"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(new Gson().toJson(Alex)));
     }

@@ -1,18 +1,29 @@
 package com.oocl.packagebooking.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
 public class Parcel {
     @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
 
     private String parcelNumber;
     private String addressee;
     private String tel;
     private int status;
+
+    public long getAppointmentTime() {
+        return appointmentTime;
+    }
+
+    public void setAppointmentTime(long appointmentTime) {
+        this.appointmentTime = appointmentTime;
+    }
+
+    private long appointmentTime;
 
     public Parcel() {
     }
